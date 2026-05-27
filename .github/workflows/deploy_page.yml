@@ -1,4 +1,6 @@
 name: 部署 VitePress 网页
+permissions:
+  contents: write
 
 on:
   workflow_dispatch:
