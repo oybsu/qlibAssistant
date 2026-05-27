@@ -5,7 +5,7 @@
 
 **每晚自动跑模型，次日给你一份 CSI300 选股清单。准不准？有复盘数据可查。**
 
-👉 [查看每日预测结果](https://touhoufan2024.github.io/qlibAssistant/) · 📊 [复盘统计：历史预测准确度](https://touhoufan2024.github.io/qlibAssistant/pages/mahoupao/review_result.html)  📈 [简单topk策略 净值曲线](https://touhoufan2024.github.io/qlibAssistant/pages/mahoupao/nav_curve.html)
+👉 [查看每日预测结果](https://oybsu.github.io/qlibAssistant/) · 📊 [复盘统计：历史预测准确度](https://oybsu.github.io/qlibAssistant/pages/mahoupao/review_result.html)  📈 [简单topk策略 净值曲线](https://oybsu.github.io/qlibAssistant/pages/mahoupao/nav_curve.html)
 
 > ⚠️ 量化预测仅供参考，不构成投资建议。股市有风险，入市需谨慎。
 
@@ -26,14 +26,14 @@
 
 - 分数越高，模型越看好
 - `pos_ratio`：有多少个模型预测正收益，如 0.875 表示 8 个模型里 7 个看涨
-- 想看更细的说明：📖 [帮助文档](https://touhoufan2024.github.io/qlibAssistant/pages/about)
+- 想看更细的说明：📖 [帮助文档](https://oybsu.github.io/qlibAssistant/pages/about)
 
 ---
 
 ## 预测准不准？
 
 我们定期对历史预测做复盘，统计止盈胜率、持有一天收益等。  
-👉 [复盘统计分析](https://touhoufan2024.github.io/qlibAssistant/pages/mahoupao/review_result.html)
+👉 [复盘统计分析](https://oybsu.github.io/qlibAssistant/pages/mahoupao/review_result.html)
 
 **小贴士**：实盘不必死等收盘价买入。若当日已明显拉升，可挂个稍低的价格，等更合适的机会。
 
