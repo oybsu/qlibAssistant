@@ -12,6 +12,8 @@ on:
 jobs:
   check-home-access:
     runs-on: ubuntu-latest
+    env:                     # <-- 添加这两行
+      MLFLOW_ALLOW_FILE_STORE: 'true'
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     steps:
       - name: 1. 下载最新qlib_bin.tar.gz
