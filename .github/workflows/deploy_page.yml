@@ -20,6 +20,8 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:                     # <-- 添加这两行
+      MLFLOW_ALLOW_FILE_STORE: 'true'
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     steps:
       - name: 检出 main 分支
