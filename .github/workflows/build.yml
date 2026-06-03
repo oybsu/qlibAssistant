@@ -11,6 +11,8 @@ jobs:
   sonarqube:
     name: SonarQube
     runs-on: ubuntu-latest
+    env:                     # <-- 添加这两行
+      MLFLOW_ALLOW_FILE_STORE: 'true'
     steps:
       - uses: actions/checkout@v4
         with:
