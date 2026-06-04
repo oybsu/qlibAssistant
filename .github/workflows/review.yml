@@ -1,4 +1,6 @@
 name: Review
+permissions:
+  contents: write
 
 on:
   workflow_run:
@@ -11,7 +13,7 @@ jobs:
   check-home-access:
     runs-on: ubuntu-latest
     env:
-      MLFLOW_ALLOW_FILE_STORE: 'true'   # 解决 MLflow 文件存储后端问题
+      MLFLOW_ALLOW_FILE_STORE: 'true'
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     steps:
       - name: 1. 下载最新 qlib_bin.tar.gz
@@ -71,7 +73,6 @@ jobs:
 
           echo ">>> 切换到 qlib_score 分支..."
           git fetch origin
-          # 删除可能引起冲突的本地目录（内容已备份）
           rm -rf backtest_csv review_csv
           if git show-ref --quiet refs/remotes/origin/qlib_score; then
             git checkout qlib_score
