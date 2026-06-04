@@ -268,30 +268,45 @@ class ModelReviewHelper:
         return df
 
     def _backtest_handle_df_topk(self, df_ret, csi300_df, date_range_list, name, top_num):
+        """修改后：增加日期存在性检查，并确保按 avg_score 排序"""
         logger.info(f"backtest handle df {name} top {top_num}")
         df_topk = []
         for date in date_range_list:
-            df_topk_ret = df_ret[date]
-            # 获取df_ret的instrument排序前10名
-            topk_instruments = df_topk_ret['instrument'].head(top_num).tolist()
-            # 计算 top10 instrument 的 avg_score 平均值
-            avg_real_label = df_topk_ret[df_topk_ret['instrument'].isin(topk_instruments)]['real_label'].mean()
+            # 检查该日期的预测数据是否存在
+            if date not in df_ret:
+                print(f"警告: 日期 {date} 的预测数据不存在，跳过该日")
+                continue
+
+            df_day = df_ret[date]
+            # 确保按 avg_score 降序排序（原数据可能未排序）
+            if 'avg_score' not in df_day.columns:
+                print(f"警告: 日期 {date} 的数据缺少 'avg_score' 列，跳过")
+                continue
+            df_day_sorted = df_day.sort_values('avg_score', ascending=False)
+            topk_instruments = df_day_sorted['instrument'].head(top_num).tolist()
+            avg_real_label = df_day_sorted.head(top_num)['real_label'].mean()
+
             # 根据 date 合并 csi300_df
             csi300_row = csi300_df[csi300_df['datetime'] == pd.to_datetime(date)]
             if not csi300_row.empty:
                 csi300_label = csi300_row.iloc[0]["csi300_real_label"]
             else:
                 csi300_label = None
-            # 将每一行数据作为字典存入列表，最后汇总为一个 DataFrame
+
+            # 构建结果行
             row_dict = {'date': date}
             for i, inst in enumerate(topk_instruments):
                 row_dict[f'top{i+1}'] = inst
-            # 填充不足10只股票
             for i in range(len(topk_instruments), top_num):
                 row_dict[f'top{i+1}'] = None
             row_dict['avg_real_label'] = avg_real_label
             row_dict['csi300_real_label'] = csi300_label
             df_topk.append(row_dict)
+
+        if not df_topk:
+            logger.warning(f"没有有效的回测数据用于 {name} top {top_num}")
+            return
+
         df_topk = pd.DataFrame(df_topk)
         # 计算换手率
         turnover_rates = []
@@ -304,13 +319,10 @@ class ModelReviewHelper:
                 if len(curr_top) == 0:
                     turnover_rates.append(float('nan'))
                 else:
-                    # 换手率定义为当前位置的 top10 有多少支被下一期 top10 替换掉
                     changed = curr_top - next_top
                     turnover_rate = len(changed) / top_num
                     turnover_rates.append(turnover_rate)
         df_topk["turnover_rate"] = turnover_rates
-
-
 
         df_equity = self._calculate_daily_equity(df_topk)
         print(df_equity)
